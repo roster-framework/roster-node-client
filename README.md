@@ -26,6 +26,14 @@ go run ./cmd/roster-resource-server
 
 Core-side `token_env` names refer to the service tokens available in the **Core process**. The values must match the provider tokens and must never appear in a Node binding, manifest, or Git. Core의 `token_env`는 Core 프로세스에서 읽는 환경변수 이름이며 값은 공급자 토큰과 일치해야 합니다.
 
+To start both prepared services with one command, build Runtime from `runtime/` with `npm ci && npm run build`, then build Resource from `resource/` with `go build -o roster-resource-server.exe ./cmd/roster-resource-server` on Windows (use `roster-resource-server` on Linux). Create an owner-only config JSON and a separate owner-only env JSON **outside this repository**, then run from the repository root:
+
+```sh
+node scripts/launch.mjs --config ../local-config/node-client.json
+```
+
+The config uses `schema: "roster-launch/1"`, `data_root`, `env_file`, `runtime_entry` (the absolute path to `runtime/dist/main.js`), and `resource_binary`; `runtime_port`, `resource_port`, and `agent_module` are optional. The env file has the shape `{ "env": { "ROSTER_TOKEN": "...", "ROSTER_RESOURCE_TOKEN": "...", "ROSTER_RESOURCE_ADMIN_TOKEN": "..." } }`. Use distinct, real tokens in that external file and give it owner-only permissions. The launcher serves loopback ports 7331 and 7340 by default, checks both health endpoints, and keeps separate Runtime and Resource data under its external `data_root`. Its grouped startup and shutdown have been verified in Linux Docker; native Windows ACL and signal behavior remain unverified. 두 서비스를 한 번에 실행할 때 설정·토큰·데이터를 저장소 밖에 두고, Runtime과 Resource의 토큰과 데이터 경계를 분리하세요. 원격 연결에는 별도의 TLS 배포 설정이 필요합니다.
+
 ## Verify / 검증
 
 From each component, run the Docker module checks and package build separately. 구성요소별로 Docker 검증과 패키지 빌드를 수행합니다.
