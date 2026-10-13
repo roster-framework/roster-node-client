@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "thread_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+    },
+    "definition": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "participants": {
+          "minItems": 2,
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "member_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "accept": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                }
+              }
+            },
+            "required": [
+              "member_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "recorder": {
+          "type": "object",
+          "properties": {
+            "member_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+            },
+            "accept": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              }
+            }
+          },
+          "required": [
+            "member_id"
+          ],
+          "additionalProperties": false
+        },
+        "reviewer_member_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+        }
+      },
+      "required": [
+        "version",
+        "participants",
+        "rounds",
+        "recorder"
+      ],
+      "additionalProperties": false
+    },
+    "participants": {
+      "minItems": 2,
+      "maxItems": 12,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "team_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "human",
+              "agent"
+            ]
+          }
+        },
+        "required": [
+          "member_id",
+          "name",
+          "team_id",
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "team_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent"
+          ]
+        }
+      },
+      "required": [
+        "member_id",
+        "name",
+        "team_id",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "cursor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 16
+    },
+    "blocked": {
+      "type": "boolean"
+    },
+    "turns": {
+      "minItems": 3,
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "discussion",
+              "minutes",
+              "review"
+            ]
+          },
+          "round": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "member_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "attention",
+              "completed",
+              "waiting",
+              "cancelled"
+            ]
+          },
+          "execution_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "card_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 20000
+          },
+          "artifact_name": {
+            "type": "string",
+            "const": "minutes.md"
+          },
+          "review_action": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "request_changes"
+            ]
+          }
+        },
+        "required": [
+          "index",
+          "phase",
+          "member_id",
+          "state"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "thread_id",
+    "definition",
+    "participants",
+    "cursor",
+    "blocked",
+    "turns"
+  ],
+  "additionalProperties": false
+}

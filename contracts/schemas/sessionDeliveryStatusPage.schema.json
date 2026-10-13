@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "items": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "execution_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+          },
+          "work_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "member_id": {
+            "type": "string"
+          },
+          "unit_id": {
+            "type": "string"
+          },
+          "confirmed_through": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "complete"
+            ]
+          },
+          "last_attempt": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "ok",
+                  "error"
+                ]
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "read",
+                  "validate",
+                  "archive",
+                  "checkpoint",
+                  "ack",
+                  "complete",
+                  "transfer"
+                ]
+              },
+              "duration_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "failures": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "consecutive_failures": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "at",
+              "outcome",
+              "stage",
+              "duration_ms",
+              "count",
+              "failures",
+              "consecutive_failures"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "execution_id",
+          "work_id",
+          "member_id",
+          "unit_id",
+          "confirmed_through",
+          "complete",
+          "state"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "next_after": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "additionalProperties": false
+}

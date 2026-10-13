@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "const": "roster/0.1"
+    },
+    "runtime_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "string"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "statuses": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "knowledge:write"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "statuses",
+          "events",
+          "skills",
+          "rules",
+          "capabilities"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "isolation": {
+      "type": "string",
+      "enum": [
+        "trusted-local-process",
+        "sandboxed"
+      ]
+    },
+    "management": {
+      "default": false,
+      "type": "boolean"
+    },
+    "execution_continuation": {
+      "type": "string",
+      "enum": [
+        "roster-execution-continuation/1",
+        "roster-execution-continuation/2"
+      ]
+    }
+  },
+  "required": [
+    "protocol",
+    "runtime_id",
+    "name",
+    "engine",
+    "agents",
+    "isolation",
+    "management"
+  ],
+  "additionalProperties": false
+}

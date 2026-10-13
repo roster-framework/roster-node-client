@@ -1,0 +1,1 @@
+{"type":"object","properties":{"status":{"type":"string","enum":["success","needs_help"]},"summary":{"type":"string"},"minutes":{"type":"string"}},"required":["status","summary","minutes"],"additionalProperties":false}

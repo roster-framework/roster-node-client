@@ -1,0 +1,1 @@
+{"id":"openai-api","name":"OpenAI API","agent":{"id":"openai-template","name":"OpenAI API","kind":"llm","provider":"openai-compatible","base_url":"https://api.openai.com/v1","credential_env":"OPENAI_API_KEY","instructions":"","model":""}}

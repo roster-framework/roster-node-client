@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "state": {
+      "default": "all",
+      "type": "string",
+      "enum": [
+        "all",
+        "pending",
+        "complete"
+      ]
+    },
+    "limit": {
+      "default": 50,
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "after": {
+      "default": "",
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+        },
+        {
+          "type": "string",
+          "const": ""
+        }
+      ]
+    }
+  },
+  "required": [
+    "state",
+    "limit",
+    "after"
+  ],
+  "additionalProperties": false
+}

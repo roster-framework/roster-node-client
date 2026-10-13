@@ -1,0 +1,40 @@
+{
+  "name": "@roster/contracts",
+  "version": "0.49.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "description": "Versioned Roster runtime and core interface contracts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./desk": {
+      "types": "./desk/index.d.mts",
+      "import": "./desk/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "desk",
+    "schemas",
+    "README.md",
+    "manifest.json"
+  ],
+  "scripts": {
+    "build": "tsc && node scripts/schemas.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

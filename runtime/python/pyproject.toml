@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roster-runtime-agents"
+version = "0.1.0"
+description = "Runtime-owned LangGraph and CrewAI model adapters for Roster"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11,<3.14"
+dependencies = ["pydantic>=2.10,<3"]
+
+[project.optional-dependencies]
+langgraph = ["langchain==1.4.3", "langgraph==1.2.14", "langchain-openai==1.6.7", "langchain-anthropic==1.7.5"]
+crewai = ["crewai[litellm]==1.15.23"]
+
+[tool.setuptools.packages.find]
+include = ["roster_agents*"]
