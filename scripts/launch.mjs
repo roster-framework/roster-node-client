@@ -11,10 +11,10 @@ import { performance } from 'node:perf_hooks';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIME_ROOT = join(ROOT, 'runtime');
 const RESOURCE_ROOT = join(ROOT, 'resource');
-const RESERVED = new Set(['PATH','SYSTEMROOT','WINDIR','HOME','USERPROFILE','TMP','TEMP','NODE_OPTIONS','NODE_PATH','LD_PRELOAD','LD_LIBRARY_PATH','PORT','ROSTER_LISTEN','ROSTER_DATA_DIR','ROSTER_TOKEN','ROSTER_RESOURCE_TOKEN','ROSTER_RESOURCE_ADMIN_TOKEN','ROSTER_AGENT_MODULE']);
+const RESERVED = new Set(['PATH','SYSTEMROOT','WINDIR','HOME','USERPROFILE','HOMEDRIVE','HOMEPATH','TMP','TEMP','TMPDIR','LANG','LC_ALL','COMSPEC','PATHEXT','NODE_OPTIONS','NODE_PATH','LD_PRELOAD','LD_LIBRARY_PATH','HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','NO_PROXY','http_proxy','https_proxy','all_proxy','no_proxy','REQUEST_METHOD','SSL_CERT_FILE','SSL_CERT_DIR','CURL_CA_BUNDLE','GODEBUG','GOGC','GOMAXPROCS','GOMEMLIMIT','GOTRACEBACK','PORT','ROSTER_LISTEN','ROSTER_DATA_DIR','ROSTER_TLS_CERT','ROSTER_TLS_KEY','ROSTER_TOKEN','ROSTER_RESOURCE_TOKEN','ROSTER_RESOURCE_ADMIN_TOKEN','ROSTER_AGENT_MODULE','ROSTER_AGENT_OPTIONS']);
 const TOTAL_MS = 30_000;
 const STARTUP_MS = 60_000;
-const ENV_KEYS = new Set(['ROSTER_TOKEN','ROSTER_RESOURCE_TOKEN','ROSTER_RESOURCE_ADMIN_TOKEN']);
+const SERVICE_ENV_KEYS = ['ROSTER_TOKEN','ROSTER_RESOURCE_TOKEN','ROSTER_RESOURCE_ADMIN_TOKEN'];
 
 class LaunchFailure extends Error {
   constructor(component, code, exit = 2) { super(code); this.component = component; this.code = code; this.exit = exit; }
@@ -37,6 +37,29 @@ function parseStrict(text) {
 function exactKeys(obj,required,optional=[]) {
   if(!obj||typeof obj!=='object'||Array.isArray(obj))fail('preflight','config_invalid');
   const allowed=new Set([...required,...optional]);if(Object.keys(obj).some(k=>!allowed.has(k))||required.some(k=>!(k in obj)))fail('preflight','config_invalid');
+}
+export function parseAgentOptions(value) {
+  const options=value===undefined?Object.create(null):value;
+  if(!options||typeof options!=='object'||Array.isArray(options))fail('preflight','agent_options_invalid');
+  let serialized;try{serialized=JSON.stringify(options);}catch{fail('preflight','agent_options_invalid');}
+  if(typeof serialized!=='string')fail('preflight','agent_options_invalid');
+  if(Buffer.byteLength(serialized,'utf8')>16*1024)fail('preflight','agent_options_too_large');
+  return serialized;
+}
+export function parseProviderEnvNames(value) {
+  const names=value===undefined?[]:value;
+  if(!Array.isArray(names)||names.length>16||new Set(names).size!==names.length||names.some(name=>typeof name!=='string'||!/^[A-Z][A-Z0-9_]{0,99}$/u.test(name)||name.startsWith('LD_')||RESERVED.has(name)))fail('preflight','resource_provider_env_invalid');
+  return names;
+}
+export function validateServiceAndProviderEnv(envDocument,providerNames) {
+  exactKeys(envDocument,['env']);const env=envDocument.env,allowed=new Set([...SERVICE_ENV_KEYS,...providerNames]);
+  if(!env||typeof env!=='object'||Array.isArray(env)||Object.keys(env).some(name=>!allowed.has(name)))fail('preflight','env_invalid');
+  for(const name of [...SERVICE_ENV_KEYS,...providerNames])if(typeof env[name]!=='string'||env[name].length===0)fail('preflight','env_invalid');
+  const tokens={runtime:env.ROSTER_TOKEN,resource:env.ROSTER_RESOURCE_TOKEN,admin:env.ROSTER_RESOURCE_ADMIN_TOKEN};
+  if(tokens.runtime.length<24||tokens.resource.length<32||tokens.admin.length<32||new Set(Object.values(tokens)).size!==3)fail('preflight','env_invalid');
+  const providerEnv=Object.create(null);
+  for(const name of providerNames){if(env[name].length===0)fail('preflight','env_invalid');if(Buffer.byteLength(env[name],'utf8')>16*1024)fail('preflight','resource_provider_value_too_large');providerEnv[name]=env[name];}
+  return {tokens,providerEnv};
 }
 function strictOwnerOnly(info,directory) {
   if(process.platform==='win32')return;
@@ -73,18 +96,16 @@ function childBaseEnv() {
 async function prepare(configPath,started) {
   if(performance.now()-started>TOTAL_MS)fail('preflight','preflight_timeout',2);
   await ordinaryFile(configPath,{ownerOnly:true});const config=await readJson(configPath);
-  exactKeys(config,['schema','data_root','env_file','runtime_entry','resource_binary'],['runtime_port','resource_port','agent_module']);
+  exactKeys(config,['schema','data_root','env_file','runtime_entry','resource_binary'],['runtime_port','resource_port','agent_module','agent_options','resource_provider_env']);
   if(config.schema!=='roster-launch/1')fail('preflight','config_invalid');
   const runtimePort=config.runtime_port??7331,resourcePort=config.resource_port??7340;
   if(!Number.isInteger(runtimePort)||runtimePort<1||runtimePort>65535||!Number.isInteger(resourcePort)||resourcePort<1||resourcePort>65535||runtimePort===resourcePort)fail('preflight','port_invalid');
   const base=dirname(configPath),paths={data:resolvePath(config.data_root,base),envFile:resolvePath(config.env_file,base),runtime:resolvePath(config.runtime_entry,base),resource:resolvePath(config.resource_binary,base),agent:config.agent_module===undefined?null:resolvePath(config.agent_module,base)};
   for(const candidate of [configPath,paths.data,paths.envFile,paths.agent].filter(Boolean))outsideRepos(candidate);
   const external=[configPath,paths.data,paths.envFile,paths.agent].filter(Boolean);for(let i=0;i<external.length;i++)for(let j=i+1;j<external.length;j++)if(overlap(external[i],external[j]))fail('preflight','path_overlap');
-  await ordinaryFile(paths.envFile,{ownerOnly:true});const doc=await readJson(paths.envFile);exactKeys(doc,['env']);
-  if(!doc.env||typeof doc.env!=='object'||Array.isArray(doc.env)||Object.keys(doc.env).some(k=>!ENV_KEYS.has(k)))fail('preflight','env_invalid');
-  for(const [name,value] of Object.entries(doc.env))if(typeof value!=='string')fail('preflight','env_invalid');
-  const tokens={runtime:doc.env.ROSTER_TOKEN,resource:doc.env.ROSTER_RESOURCE_TOKEN,admin:doc.env.ROSTER_RESOURCE_ADMIN_TOKEN};
-  if(typeof tokens.runtime!=='string'||tokens.runtime.length<24||typeof tokens.resource!=='string'||tokens.resource.length<32||typeof tokens.admin!=='string'||tokens.admin.length<32||new Set(Object.values(tokens)).size!==3)fail('preflight','env_invalid');
+  const agentOptions=parseAgentOptions(config.agent_options),providerNames=parseProviderEnvNames(config.resource_provider_env);
+  await ordinaryFile(paths.envFile,{ownerOnly:true});const doc=await readJson(paths.envFile);
+  const {tokens,providerEnv}=validateServiceAndProviderEnv(doc,providerNames);
   const expectedRuntime=join(RUNTIME_ROOT,'dist','main.js');if(paths.runtime!==expectedRuntime)fail('preflight','runtime_entry_invalid');
   await ordinaryFile(paths.runtime,{max:16*1024*1024});
   for(const dir of [join(RUNTIME_ROOT,'node_modules'),join(RUNTIME_ROOT,'presets')]){await noSymlinkPath(dir);const info=await lstat(dir);if(!info.isDirectory())fail('preflight','runtime_prerequisite_missing');}
@@ -93,7 +114,7 @@ async function prepare(configPath,started) {
   const dataInfo=await lstat(paths.data).catch(()=>null);if(dataInfo){if(!dataInfo.isDirectory())fail('preflight','data_root_invalid');await noSymlinkPath(paths.data);strictOwnerOnly(dataInfo,true);}
   await portFree(runtimePort);await portFree(resourcePort);
   if(performance.now()-started>TOTAL_MS)fail('preflight','preflight_timeout',2);
-  return {config,paths,tokens,runtimePort,resourcePort,started};
+  return {config,paths,tokens,providerEnv,agentOptions,runtimePort,resourcePort,started};
 }
 async function initDataRoot(path) {
   await checkExistingParents(path);let created=false;try{await mkdir(path,{mode:0o700});created=true;}catch(e){if(e.code!=='EEXIST')fail('preflight','data_root_invalid');}
@@ -148,8 +169,8 @@ export async function launch(argv=process.argv.slice(2)) {
   try{
     const configPath=parseArgs(argv),p=await prepare(configPath,started);await initDataRoot(p.paths.data);
     await initServiceData(join(p.paths.data,'runtime'));await initServiceData(join(p.paths.data,'resource'));lock=await acquireLock(p.paths.data);
-    const runtimeEnv={...childBaseEnv(),ROSTER_TOKEN:p.tokens.runtime,ROSTER_LISTEN:'127.0.0.1',PORT:String(p.runtimePort),ROSTER_DATA_DIR:join(p.paths.data,'runtime')};if(p.paths.agent)runtimeEnv.ROSTER_AGENT_MODULE=p.paths.agent;
-    const resourceEnv={...childBaseEnv(),ROSTER_RESOURCE_TOKEN:p.tokens.resource,ROSTER_RESOURCE_ADMIN_TOKEN:p.tokens.admin,ROSTER_LISTEN:'127.0.0.1',PORT:String(p.resourcePort),ROSTER_DATA_DIR:join(p.paths.data,'resource')};
+    const runtimeEnv={...childBaseEnv(),ROSTER_TOKEN:p.tokens.runtime,ROSTER_LISTEN:'127.0.0.1',PORT:String(p.runtimePort),ROSTER_DATA_DIR:join(p.paths.data,'runtime'),ROSTER_AGENT_OPTIONS:p.agentOptions};if(p.paths.agent)runtimeEnv.ROSTER_AGENT_MODULE=p.paths.agent;
+    const resourceEnv={...childBaseEnv(),...p.providerEnv,ROSTER_RESOURCE_TOKEN:p.tokens.resource,ROSTER_RESOURCE_ADMIN_TOKEN:p.tokens.admin,ROSTER_LISTEN:'127.0.0.1',PORT:String(p.resourcePort),ROSTER_DATA_DIR:join(p.paths.data,'resource')};
     children.push(spawnOwned('runtime',process.execPath,[p.paths.runtime],RUNTIME_ROOT,runtimeEnv));children.push(spawnOwned('resource',p.paths.resource,[],RESOURCE_ROOT,resourceEnv));
     const deadline=performance.now()+STARTUP_MS,startupAbort=new AbortController(),task=ready(children,deadline,p.runtimePort,p.resourcePort,startupAbort.signal);
     const result=await Promise.race([task.then(()=> 'ready'),signalPromise.then(()=> 'signal')]);if(result==='signal'){startupAbort.abort();await task.catch(()=>{});fail('launcher','startup_interrupted',3);}if(performance.now()>deadline)fail('launcher','readiness_timeout',3);
