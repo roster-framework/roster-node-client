@@ -46,4 +46,4 @@ docker run --rm -v "$PWD:/src" -w /src node:24-bookworm-slim sh -c "npm ci && np
 docker run --rm -v "$PWD:/src:ro" -w /src golang:1.26 go test ./...
 ```
 
-Usage details: [Runtime](runtime/README.md), [Resource](resource/README.md), [Contracts](contracts/README.md). Design/API/state diagrams: [roster-docs](https://github.com/roster-framework/roster-docs). Contribution goals and Issue/PR guidance: [CONTRIBUTING](CONTRIBUTING.md). 사용 상세는 구성요소 README에, 설계·API·상태 다이어그램은 별도 문서 저장소에 둡니다.
+Usage details: [Runtime](runtime/README.md), [Resource](resource/README.md), [Contracts](contracts/README.md). Contribution goals and Issue/PR guidance: [CONTRIBUTING](CONTRIBUTING.md). Internal design documents are maintained separately. 사용법은 구성요소 README에, 기여 안내는 CONTRIBUTING에 있습니다. 내부 설계 문서는 별도로 관리합니다.

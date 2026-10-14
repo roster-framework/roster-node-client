@@ -12,4 +12,4 @@ root export는 `src/index.ts`에서 생성한 dist 값/타입이며 `@roster/con
 
 Runtime wire, 생성/중단/continuation과 옛 Core/Work/Desk 계약이 함께 있습니다. 타입 export가 있다고 새 Go Core가 해당 업무/IAM API를 제공하는 것은 아닙니다. 새 Core의 internal/contracts Go 도메인과 이 npm package를 동일한 것으로 취급하지 않습니다. private checkpoint·자격은 공개 계약 필드로 전달하지 않습니다.
 
-상세 문서: [설계](https://github.com/roster-framework/roster-docs/blob/main/roster-contracts/design.md) · [공개 표면](https://github.com/roster-framework/roster-docs/blob/main/roster-contracts/api.md) · [TODO](https://github.com/roster-framework/roster-docs/blob/main/roster-contracts/todo.md). 소스 라이선스는 Apache-2.0이며 npm registry 출하는 아직 준비 중입니다.
+설계·API·TODO는 별도 내부 문서에서 관리합니다. 공개 계약은 이 패키지의 소스와 schema를 따릅니다. 소스 라이선스는 Apache-2.0이며 npm registry 출하는 아직 준비 중입니다.

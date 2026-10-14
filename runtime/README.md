@@ -16,4 +16,4 @@ node dist/main.js
 
 검증은 `npm run typecheck`, `npm test`를 사용합니다. 선택 Python 엔진은 별도 환경 준비가 필요합니다. 빌드/테스트 성공을 모든 provider·실제 모델·다중 호스트 수락으로 간주하지 않습니다.
 
-상세 문서는 중앙 저장소에서 관리합니다: [설계](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/design.md) · [API](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/api.md) · [TODO](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/todo.md). 옛 Core 통합과 새 Core 제공 범위를 구분합니다.
+설계·API·TODO는 별도 내부 문서에서 관리합니다. 공개 사용법은 이 README와 소스 계약을 따릅니다. 옛 Core 통합과 새 Core 제공 범위를 구분합니다.

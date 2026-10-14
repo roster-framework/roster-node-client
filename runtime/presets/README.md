@@ -1,8 +1,8 @@
 # Bundled presets
 
-`codex-cli-collaborating` adds explicit durable shared-question waiting and checkpoint resumption to authorized delegation. It requires invocation-scoped Core access, current authority checks and Runtime suspension support. Ordinary and delegating templates keep their existing contracts. See [collaboration protocol](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/design.md).
+`codex-cli-collaborating` adds explicit durable shared-question waiting and checkpoint resumption to authorized delegation. It requires invocation-scoped Core access, current authority checks and Runtime suspension support. Ordinary and delegating templates keep their existing contracts. Its implementation is in [collaborating.mjs](codex/collaborating.mjs).
 
-`codex-cli-delegating` is an optional separate template for authorized asynchronous task/conversation delegation. Existing `codex-cli` v2 tool exposure is preserved. See [delegation contract](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/design.md); a child creation receipt does not mean result completion.
+`codex-cli-delegating` is an optional separate template for authorized asynchronous task/conversation delegation. Existing `codex-cli` v2 tool exposure is preserved. Its implementation is in [delegating.mjs](codex/delegating.mjs); a child creation receipt does not mean result completion.
 
 These are Runtime source files, included in the Git repository and production package. No separate preset repository or download is required for built-in templates.
 
@@ -12,4 +12,4 @@ Templates emit local `complete`/`fail`. Semantic help, process failure and cance
 
 External author modules remain optional additions via `ROSTER_AGENT_MODULE`; duplicate template IDs are rejected instead of replacing built-in implementations. Changing a declaration/version changes its catalogue revision. Existing instances retain their creation contract and are not silently migrated.
 
-Source location is authoritative: the earlier standalone `roster-agent-presets` repository is no longer the Runtime deployment source. `claude-code/agent.mjs` provides `claude-code-cli`; Runtime automatically resolves both CLIs on its own host. See [discovery and status](https://github.com/roster-framework/roster-docs/blob/main/roster-runtime-node/api.md). Claude defaults to read-only built-in tools and respects CLI permissions without global permission bypass. Both templates remain visible when installation/login needs attention. No company-specific policy, model availability guesses, credentials or autonomous planning policy belongs in the built-in adapter.
+Source location is authoritative: the earlier standalone `roster-agent-presets` repository is no longer the Runtime deployment source. `claude-code/agent.mjs` provides `claude-code-cli`; Runtime automatically resolves both CLIs on its own host. The [local discovery implementation](../src/infrastructure/local-cli-discovery.ts) determines installation and login status. Claude defaults to read-only built-in tools and respects CLI permissions without global permission bypass. Both templates remain visible when installation/login needs attention. No company-specific policy, model availability guesses, credentials or autonomous planning policy belongs in the built-in adapter.

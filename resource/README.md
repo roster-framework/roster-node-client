@@ -14,4 +14,4 @@ go run ./cmd/roster-resource-server
 
 Go 검증은 Linux Docker의 `go test ./...`, `go vet ./...`와 기존 Node CLI tests를 사용합니다. 원본 문서와 provider 연결 데이터는 테스트용 데이터와 분리합니다.
 
-상세 문서: [설계](https://github.com/roster-framework/roster-docs/blob/main/roster-resource-go/design.md) · [API](https://github.com/roster-framework/roster-docs/blob/main/roster-resource-go/api.md) · [TODO](https://github.com/roster-framework/roster-docs/blob/main/roster-resource-go/todo.md). 옛 Core IAM 통합을 새 작은 Core의 기능으로 가정하지 않습니다.
+설계·API·TODO는 별도 내부 문서에서 관리합니다. 공개 사용법은 이 README와 소스 계약을 따릅니다. 옛 Core IAM 통합을 새 작은 Core의 기능으로 가정하지 않습니다.
