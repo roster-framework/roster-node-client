@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 500" role="img" aria-labelledby="title desc">
+<title id="title">Roster Node Client / 로스터 Node Client flow</title>
+<desc id="desc">Core calls Runtime Agents and Resource MCP tools. Runtime can emit Events routed through Core subscriptions. Registration is not availability; inspect the same receipt after an unknown Call or cancellation acknowledgement.</desc>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#69768b"/></marker>
+  <marker id="violet" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9c7bd8"/></marker>
+  <style>
+    text{font-family:system-ui,"Noto Sans KR",sans-serif;fill:#edf0f6}.small{font-size:14px;fill:#bbc5d3}.label{font-size:17px;font-weight:700}.card{fill:#1d2a3d;stroke:#65738a;stroke-width:1.5}.core{fill:#332d51;stroke:#ac98eb;stroke-width:1.5}.lane{fill:#152133;stroke:#46536a}.flow{fill:none;stroke:#7d8aa0;stroke-width:2.4;marker-end:url(#arrow)}.sub{fill:none;stroke:#bd9cf4;stroke-width:3;stroke-dasharray:8 7;marker-end:url(#violet)}
+  </style>
+</defs>
+<rect width="1080" height="500" rx="20" fill="#111a29"/>
+<text x="34" y="40" class="label">ROSTER NODE CLIENT · HOSTED OPERATIONS · 호스팅 기능</text>
+<rect x="50" y="105" width="240" height="110" rx="13" class="core"/><text x="170" y="143" text-anchor="middle" class="label">Roster Core</text><text x="170" y="171" text-anchor="middle" class="small">Calls · Events · subscriptions</text><text x="170" y="195" text-anchor="middle" class="small">호출 · 이벤트 · 구독</text>
+<rect x="430" y="68" width="270" height="145" rx="13" class="card"/><text x="565" y="106" text-anchor="middle" class="label">Runtime Node</text><text x="565" y="133" text-anchor="middle" class="small">Agent operations · 에이전트 기능</text><text x="565" y="162" text-anchor="middle" class="small">Describe · Run · Result</text><text x="565" y="189" text-anchor="middle" class="small">Event emission · 이벤트 발행</text>
+<rect x="430" y="252" width="270" height="120" rx="13" class="card"/><text x="565" y="290" text-anchor="middle" class="label">Resource Node</text><text x="565" y="318" text-anchor="middle" class="small">tools.list · tools.call</text><text x="565" y="346" text-anchor="middle" class="small">documents · MCP resources</text>
+<rect x="810" y="274" width="220" height="76" rx="12" class="lane"/><text x="920" y="306" text-anchor="middle" class="label">MCP provider</text><text x="920" y="331" text-anchor="middle" class="small">separate process · 별도 프로세스</text>
+<path d="M290 135C345 135 370 132 420 132" class="flow"/><path d="M290 184C345 184 370 312 420 312" class="flow"/><path d="M700 312H800" class="flow"/>
+<text x="352" y="119" text-anchor="middle" class="small">Call</text><text x="351" y="260" text-anchor="middle" class="small">Call</text>
+<path d="M565 213C565 235 300 230 245 215" class="sub"/><text x="384" y="236" text-anchor="middle" class="small">published Event → Core subscription → target Call</text>
+<rect x="50" y="414" width="980" height="58" rx="11" class="lane"/><text x="72" y="439" class="small">Registered ≠ reachable · 등록 ≠ 연결 가능</text><text x="390" y="439" class="small">unknown → inspect same receipt · 같은 receipt 검사</text><text x="740" y="439" class="small">Cancel ACK ≠ terminal · 취소 ACK ≠ 종료</text>
+<text x="50" y="390" class="small">Separate service tokens and data roots · 서비스 토큰·데이터 폴더 분리</text>
+</svg>
