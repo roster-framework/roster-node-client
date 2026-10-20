@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "member_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "team_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "human",
+        "agent"
+      ]
+    }
+  },
+  "required": [
+    "member_id",
+    "name",
+    "team_id",
+    "kind"
+  ],
+  "additionalProperties": false
+}

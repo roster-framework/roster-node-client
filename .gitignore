@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.roster/
+node_modules/
+dist/
+build/
+coverage/
+*.db*
+*.exe
+*.log
+*.out
+__pycache__/
+.DS_Store
+AGENTS.md

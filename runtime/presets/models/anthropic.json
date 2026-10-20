@@ -1,0 +1,1 @@
+{"id":"anthropic-api","name":"Anthropic API","agent":{"id":"anthropic-template","name":"Anthropic API","kind":"llm","provider":"anthropic","base_url":"https://api.anthropic.com","credential_env":"ANTHROPIC_API_KEY","instructions":"","model":""}}

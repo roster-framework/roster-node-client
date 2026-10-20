@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "output": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "events": {
+      "default": [],
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+          },
+          "data": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "type",
+          "data"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "artifacts": {
+      "default": [],
+      "maxItems": 10,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_.-]{1,120}$"
+          },
+          "mime": {
+            "type": "string",
+            "enum": [
+              "text/plain",
+              "text/markdown",
+              "application/json"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 100000
+          }
+        },
+        "required": [
+          "name",
+          "mime",
+          "content"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "metrics": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "status",
+    "summary",
+    "output",
+    "events",
+    "artifacts",
+    "metrics"
+  ],
+  "additionalProperties": false
+}

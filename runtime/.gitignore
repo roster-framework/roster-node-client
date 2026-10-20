@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.roster/
+*.db*
+.env
+__pycache__/
+*.egg-info/
+python/build/
+*.log
+*.tgz
+!vendor/roster-contracts-0.49.0.tgz

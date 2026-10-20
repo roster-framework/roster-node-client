@@ -1,0 +1,8 @@
+node_modules/
+tests/
+src/
+scripts/
+.git/
+.env*
+*.log
+*.tgz

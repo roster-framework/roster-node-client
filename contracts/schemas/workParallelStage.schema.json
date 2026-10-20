@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 63
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "all",
+        "any"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "attention",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "branches": {
+      "minItems": 2,
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "member_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,119}$"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "execution_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,119}$"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "attention",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "selected": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "index",
+          "member_id",
+          "name",
+          "state"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "index",
+    "mode",
+    "state",
+    "branches"
+  ],
+  "additionalProperties": false
+}

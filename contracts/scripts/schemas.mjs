@@ -1,0 +1,33 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { z } from 'zod';
+import { Agent, Manifest, Invocation, Result, Frame, Workflow, QueueSchedule, Scheduler, TaskStep, TaskFlow, RecurringWork, ManagedAgent, NotificationConfigure, SessionDeliveryQuery, SessionDeliveryAttempt, SessionDeliveryStatus, SessionDeliveryStatusPage } from '../dist/index.js';
+mkdirSync('schemas', { recursive: true });
+const {SchedulerCommand,SchedulerView,SchedulerReceipt}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({schedulerCommand:SchedulerCommand,schedulerView:SchedulerView,schedulerReceipt:SchedulerReceipt}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const {McpCatalogue,McpDescriptor,McpConnectionChange,McpChangeReceipt,McpToolUse,McpToolSelection}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({mcpCatalogue:McpCatalogue,mcpDescriptor:McpDescriptor,mcpConnectionChange:McpConnectionChange,mcpChangeReceipt:McpChangeReceipt,mcpToolUse:McpToolUse,mcpToolSelection:McpToolSelection}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const events=await import('../dist/index.js');
+writeFileSync('schemas/executionContinuation.schema.json',JSON.stringify(z.toJSONSchema(events.ExecutionContinuation),null,2)+'\n');
+for(const name of ['ExecutionSuspensionOrigin','ExecutionSuspension','SuspendedFrame','SuspendedExecutionReceipt'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+writeFileSync('schemas/invocationAuthority.schema.json',JSON.stringify(z.toJSONSchema(events.InvocationAuthority),null,2)+'\n');
+for(const name of ['AgentCreationSource','AgentCreationDeclaration','AgentCreationCatalogue','AgentCreationRequest','AgentCreationReceipt'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+for(const name of ['PlannedWorkCancelCommand','PlannedWorkCancelReceipt'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+writeFileSync('schemas/workParallelStage.schema.json',JSON.stringify(z.toJSONSchema(events.WorkParallelStage),null,2)+'\n');
+for(const name of ['CommandDenialRecord','CommandDenialQuery','CommandDenialPage'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+for(const name of ['MeetingParticipant','MeetingDefinition','MeetingCreateCommand','MeetingMemberSnapshot','MeetingTurn','MeetingRecord'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+for(const name of ['RecurringChangeAuditQuery','RecurringChangeAuditEntry','RecurringChangeAuditPage'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+for(const name of ['ProviderChangeCommand','ProviderChangeProgress'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+for(const name of ['OriginalEventDefinition','EventConfigurationQuery','EventConfiguration','EventConfigurationChange','EventDefinitionPreview','EventConfigurationReceipt','EventWorkTextIntent','EventWorkTextCommand','EventWorkCreationReceipt'])writeFileSync('schemas/'+name[0].toLowerCase()+name.slice(1)+'.schema.json',JSON.stringify(z.toJSONSchema(events[name]),null,2)+'\n');
+const {RecurringPageQuery,RecurringDefinitionQuery,RecurringMetadata,RecurringPage,RecurringDefinitionView,RecurringChangeReceipt}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({recurringPageQuery:RecurringPageQuery,recurringDefinitionQuery:RecurringDefinitionQuery,recurringMetadata:RecurringMetadata,recurringPage:RecurringPage,recurringDefinitionView:RecurringDefinitionView,recurringChangeReceipt:RecurringChangeReceipt}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const {ParallelMemberStep,ParallelDefinition}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({parallelMemberStep:ParallelMemberStep,parallelDefinition:ParallelDefinition}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const {ResourceDocumentMetadata,ResourceDocument,ResourceDocumentList,ResourceDocumentResponse,ResourceHistoryQuery,ResourceVersion,ResourceHistoryPage}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({resourceDocumentMetadata:ResourceDocumentMetadata,resourceDocument:ResourceDocument,resourceDocumentList:ResourceDocumentList,resourceDocumentResponse:ResourceDocumentResponse,resourceHistoryQuery:ResourceHistoryQuery,resourceVersion:ResourceVersion,resourceHistoryPage:ResourceHistoryPage}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const {WorkCommandAcceptance,WorkCommandAuditQuery,WorkCommandAuditPage}=await import('../dist/index.js');
+for(const [name,schema] of Object.entries({workCommandAcceptance:WorkCommandAcceptance,workCommandAuditQuery:WorkCommandAuditQuery,workCommandAuditPage:WorkCommandAuditPage}))writeFileSync('schemas/'+name+'.schema.json',JSON.stringify(z.toJSONSchema(schema),null,2)+'\n');
+const {SessionDeliverySummary}=await import('../dist/index.js');
+writeFileSync('schemas/sessionDeliverySummary.schema.json',JSON.stringify(z.toJSONSchema(SessionDeliverySummary),null,2)+'\n');
+for (const [name, schema] of Object.entries({ agent: Agent, manifest: Manifest, invocation: Invocation, result: Result, frame: Frame, workflow: Workflow, scheduling: QueueSchedule, scheduler: Scheduler, taskStep: TaskStep, taskFlow: TaskFlow, recurringWork: RecurringWork, managedAgent: ManagedAgent, notificationConfigure: NotificationConfigure, sessionDeliveryQuery: SessionDeliveryQuery, sessionDeliveryAttempt: SessionDeliveryAttempt, sessionDeliveryStatus: SessionDeliveryStatus, sessionDeliveryStatusPage: SessionDeliveryStatusPage })) {
+  writeFileSync(`schemas/${name}.schema.json`, JSON.stringify(z.toJSONSchema(schema), null, 2) + '\n');
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subscriptions": {
+      "anyOf": [
+        {
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "on": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "from_member_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "target_member_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "owner_member_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "instruction": {
+                "type": "string",
+                "maxLength": 10000
+              },
+              "resource_ids": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                }
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 2
+              },
+              "delay_seconds": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 31536000
+              },
+              "source_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              },
+              "from": {
+                "type": "object",
+                "properties": {
+                  "runtime_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  }
+                },
+                "required": [
+                  "runtime_id",
+                  "agent_id"
+                ],
+                "additionalProperties": false
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "runtime_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  },
+                  "agent_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  }
+                },
+                "required": [
+                  "runtime_id",
+                  "agent_id"
+                ],
+                "additionalProperties": false
+              },
+              "board": {
+                "type": "object",
+                "properties": {
+                  "team": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "response_event": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  },
+                  "complete_on_response": {
+                    "type": "boolean"
+                  },
+                  "actions": {
+                    "maxItems": 5,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "event": {
+                          "type": "string",
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "team",
+                  "title",
+                  "complete_on_response"
+                ],
+                "additionalProperties": false
+              },
+              "max_per_work": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
+              }
+            },
+            "required": [
+              "id",
+              "on",
+              "max_per_work"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "subscriptions"
+  ],
+  "additionalProperties": false
+}

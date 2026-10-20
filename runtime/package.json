@@ -1,0 +1,57 @@
+{
+  "name": "@roster/runtime-node",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "exports": {
+    "./agent": {
+      "types": "./dist/agent.d.ts",
+      "import": "./dist/agent.js"
+    }
+  },
+  "files": [
+    "dist",
+    "examples",
+    "presets",
+    "python/roster_agents/*.py",
+    "python/LICENSE",
+    "python/pyproject.toml",
+    "README.md",
+    "manifest.json"
+  ],
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test presets/*.test.mjs && tsx --test tests/*.test.ts",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^1.5.12",
+    "@langchain/core": "^1.1.48",
+    "@langchain/google": "0.2.9",
+    "@langchain/groq": "1.3.1",
+    "@langchain/langgraph": "^1.4.16",
+    "@langchain/mcp-adapters": "^1.1.4",
+    "@langchain/mistralai": "1.2.0",
+    "@langchain/ollama": "1.3.0",
+    "@langchain/openai": "^1.6.0",
+    "@langchain/xai": "1.4.17",
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "@roster/contracts": "file:vendor/roster-contracts-0.49.0.tgz",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "langchain": "1.5.15",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}

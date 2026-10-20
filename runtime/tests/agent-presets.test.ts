@@ -1,0 +1,21 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {ManagedAgent} from '@roster/contracts';
+import {FileRuntimeStorage} from '../src/infrastructure/filesystem.js';
+import {saveAgentPreset} from '../src/application/agent-presets.js';
+test('agent presets persist independently and do not change created agents',async t=>{
+ const directory=await mkdtemp(join(tmpdir(),'roster-presets-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+ const storage=new FileRuntimeStorage(directory,'test');
+ const agent=ManagedAgent.parse({id:'developer',name:'Developer',kind:'echo',instructions:'Company rules',rules:['Run tests'],skills:['testing'],statuses:['success'],events:[],mcp_ids:[]});
+ await saveAgentPreset(storage,{id:'developer',name:'Developer template',agent});
+ const recovered=new FileRuntimeStorage(directory,'test');const preset=(await recovered.read()).agent_presets![0];
+ assert.equal(preset.agent.instructions,'Company rules');
+ await recovered.transact(r=>{r.managed_agents.push({...structuredClone(preset.agent),id:'new-developer'});});
+ await saveAgentPreset(recovered,{...preset,agent:{...agent,instructions:'New template'}});
+ assert.equal((await recovered.read()).managed_agents[0].instructions,'Company rules');
+ await assert.rejects(saveAgentPreset(storage,{id:'../escape',name:'Invalid',agent}));
+ await assert.rejects(saveAgentPreset(storage,{id:'valid',name:'Invalid',agent:{...agent,core_instructions:'Must not mix core policy'}}));
+});
