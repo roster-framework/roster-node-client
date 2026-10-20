@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "items": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "command_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9._:-]{1,128}$"
+              },
+              "actor": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "work-service"
+                  }
+                },
+                "required": [
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              "outcome": {
+                "type": "string",
+                "const": "forbidden"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "operation": {
+                "type": "string",
+                "const": "runtime.invoke"
+              }
+            },
+            "required": [
+              "sequence",
+              "command_id",
+              "actor",
+              "outcome",
+              "at",
+              "operation"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "command_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9._:-]{1,128}$"
+              },
+              "actor": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "human"
+                      },
+                      "account_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      },
+                      "member_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "account_id",
+                      "member_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "execution"
+                      },
+                      "member_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      },
+                      "execution_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "member_id",
+                      "execution_id"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "outcome": {
+                "type": "string",
+                "const": "forbidden"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "board.respond",
+                  "board.claim"
+                ]
+              },
+              "card_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+              }
+            },
+            "required": [
+              "sequence",
+              "command_id",
+              "actor",
+              "outcome",
+              "at",
+              "operation",
+              "card_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "command_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9._:-]{1,128}$"
+              },
+              "actor": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "human"
+                      },
+                      "account_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      },
+                      "member_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "account_id",
+                      "member_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "execution"
+                      },
+                      "member_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      },
+                      "execution_id": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "member_id",
+                      "execution_id"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "outcome": {
+                "type": "string",
+                "const": "forbidden"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "work.create.direct",
+                  "work.create.planned",
+                  "resource.invoke"
+                ]
+              }
+            },
+            "required": [
+              "sequence",
+              "command_id",
+              "actor",
+              "outcome",
+              "at",
+              "operation"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "command_id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9._:-]{1,128}$"
+              },
+              "actor": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "execution"
+                  },
+                  "member_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  },
+                  "execution_id": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "member_id",
+                  "execution_id"
+                ],
+                "additionalProperties": false
+              },
+              "outcome": {
+                "type": "string",
+                "const": "forbidden"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "operation": {
+                "type": "string",
+                "const": "agent.call"
+              }
+            },
+            "required": [
+              "sequence",
+              "command_id",
+              "actor",
+              "outcome",
+              "at",
+              "operation"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "next_after": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "additionalProperties": false
+}

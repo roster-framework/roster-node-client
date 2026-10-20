@@ -1,0 +1,7 @@
+.roster/
+.env*
+*.db*
+*.exe
+*.test
+*.out
+*.log

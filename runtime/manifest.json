@@ -1,0 +1,1 @@
+{"name":"roster-runtime-node","kind":"application","version":"0.1.0","responsibility":"Independent Node execution host with a LangGraph engine and externally loaded agents","entrypoint":"dist/main.js","protocol":"roster/0.1","agentSource":"ROSTER_AGENT_MODULE","deployment":"separate-process; may share the core machine","language":"node","defaultPort":7331}
